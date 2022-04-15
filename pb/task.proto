@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package task_manager;
+
+option go_package = "/pb";
+
+message TaskCreateRequest {
+  string title = 1;
+  string text = 2;
+}
+
+message TaskCreateResponse {
+  int64 taskId = 1;
+  bool success = 2;
+}
+
+message TaskGetRequest {
+  int64 taskId = 1;
+}
+
+message TaskGetResponse {
+  int64 taskId = 1;
+  string title = 2;
+  string text = 3;
+  bool isCompleted = 4;
+}
+
+message TaskUpdateRequest {
+  int64 taskId = 1;
+  string title = 2;
+  string text = 3;
+  bool isCompleted = 4;
+}
+
+message TaskUpdateResponse {
+  int64 taskId = 1;
+  bool success = 2;
+}
+
+message TaskDeleteRequest {
+  int64 taskId = 1;
+}
+
+message TaskDeleteResponse {
+  bool success = 1;
+}
+
+service TaskService {
+  rpc CreateTask(TaskCreateRequest) returns (TaskCreateResponse);
+  rpc GetTask(TaskGetRequest) returns (TaskGetResponse);
+  rpc UpdateTask(TaskUpdateRequest) returns (TaskUpdateResponse);
+  rpc DeleteTask(TaskDeleteRequest) returns (TaskDeleteResponse);
+}
