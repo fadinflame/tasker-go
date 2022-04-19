@@ -2,11 +2,12 @@ package endpoint
 
 import (
 	"context"
+	"github.com/go-kit/kit/endpoint"
+	"github.com/go-kit/kit/log/level"
+	pbWrapper "google.golang.org/protobuf/types/known/wrapperspb"
 	"tasker/pb"
 	models "tasker/pkg/models"
 	ts "tasker/pkg/service"
-	"github.com/go-kit/kit/endpoint"
-	"github.com/go-kit/kit/log/level"
 )
 
 type Endpoints struct {
@@ -37,8 +38,8 @@ func CreateTaskEndpoint(ts *ts.TaskService) endpoint.Endpoint {
 func GetTaskEndpoint(ts *ts.TaskService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		level.Debug(ts.Logger).Log("endpoint", "GetTask")
-		req := request.(*pb.TaskGetRequest)
-		task, err := ts.GetTask(req.TaskId)
+		req := request.(*pbWrapper.Int64Value)
+		task, err := ts.GetTask(req.Value)
 		return &pb.TaskGetResponse{
 			TaskId:      task.Id,
 			Title:       task.Title,
@@ -60,8 +61,8 @@ func UpdateTaskEndpoint(ts *ts.TaskService) endpoint.Endpoint {
 func DeleteTaskEndpoint(ts *ts.TaskService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		level.Debug(ts.Logger).Log("endpoint", "DeleteTask")
-		req := request.(*pb.TaskDeleteRequest)
-		deleted, err := ts.DeleteTask(req.TaskId)
-		return &pb.TaskDeleteResponse{Success: deleted}, err
+		req := request.(*pbWrapper.Int64Value)
+		deleted, err := ts.DeleteTask(req.Value)
+		return &pbWrapper.BoolValue{Value: deleted}, err
 	}
 }

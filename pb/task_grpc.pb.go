@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	wrapperspb "google.golang.org/protobuf/types/known/wrapperspb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -23,9 +24,9 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TaskServiceClient interface {
 	CreateTask(ctx context.Context, in *TaskCreateRequest, opts ...grpc.CallOption) (*TaskCreateResponse, error)
-	GetTask(ctx context.Context, in *TaskGetRequest, opts ...grpc.CallOption) (*TaskGetResponse, error)
+	GetTask(ctx context.Context, in *wrapperspb.Int64Value, opts ...grpc.CallOption) (*TaskGetResponse, error)
 	UpdateTask(ctx context.Context, in *TaskUpdateRequest, opts ...grpc.CallOption) (*TaskUpdateResponse, error)
-	DeleteTask(ctx context.Context, in *TaskDeleteRequest, opts ...grpc.CallOption) (*TaskDeleteResponse, error)
+	DeleteTask(ctx context.Context, in *wrapperspb.Int64Value, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error)
 }
 
 type taskServiceClient struct {
@@ -45,7 +46,7 @@ func (c *taskServiceClient) CreateTask(ctx context.Context, in *TaskCreateReques
 	return out, nil
 }
 
-func (c *taskServiceClient) GetTask(ctx context.Context, in *TaskGetRequest, opts ...grpc.CallOption) (*TaskGetResponse, error) {
+func (c *taskServiceClient) GetTask(ctx context.Context, in *wrapperspb.Int64Value, opts ...grpc.CallOption) (*TaskGetResponse, error) {
 	out := new(TaskGetResponse)
 	err := c.cc.Invoke(ctx, "/task_manager.TaskService/GetTask", in, out, opts...)
 	if err != nil {
@@ -63,8 +64,8 @@ func (c *taskServiceClient) UpdateTask(ctx context.Context, in *TaskUpdateReques
 	return out, nil
 }
 
-func (c *taskServiceClient) DeleteTask(ctx context.Context, in *TaskDeleteRequest, opts ...grpc.CallOption) (*TaskDeleteResponse, error) {
-	out := new(TaskDeleteResponse)
+func (c *taskServiceClient) DeleteTask(ctx context.Context, in *wrapperspb.Int64Value, opts ...grpc.CallOption) (*wrapperspb.BoolValue, error) {
+	out := new(wrapperspb.BoolValue)
 	err := c.cc.Invoke(ctx, "/task_manager.TaskService/DeleteTask", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -77,9 +78,9 @@ func (c *taskServiceClient) DeleteTask(ctx context.Context, in *TaskDeleteReques
 // for forward compatibility
 type TaskServiceServer interface {
 	CreateTask(context.Context, *TaskCreateRequest) (*TaskCreateResponse, error)
-	GetTask(context.Context, *TaskGetRequest) (*TaskGetResponse, error)
+	GetTask(context.Context, *wrapperspb.Int64Value) (*TaskGetResponse, error)
 	UpdateTask(context.Context, *TaskUpdateRequest) (*TaskUpdateResponse, error)
-	DeleteTask(context.Context, *TaskDeleteRequest) (*TaskDeleteResponse, error)
+	DeleteTask(context.Context, *wrapperspb.Int64Value) (*wrapperspb.BoolValue, error)
 	mustEmbedUnimplementedTaskServiceServer()
 }
 
@@ -90,13 +91,13 @@ type UnimplementedTaskServiceServer struct {
 func (UnimplementedTaskServiceServer) CreateTask(context.Context, *TaskCreateRequest) (*TaskCreateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateTask not implemented")
 }
-func (UnimplementedTaskServiceServer) GetTask(context.Context, *TaskGetRequest) (*TaskGetResponse, error) {
+func (UnimplementedTaskServiceServer) GetTask(context.Context, *wrapperspb.Int64Value) (*TaskGetResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTask not implemented")
 }
 func (UnimplementedTaskServiceServer) UpdateTask(context.Context, *TaskUpdateRequest) (*TaskUpdateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateTask not implemented")
 }
-func (UnimplementedTaskServiceServer) DeleteTask(context.Context, *TaskDeleteRequest) (*TaskDeleteResponse, error) {
+func (UnimplementedTaskServiceServer) DeleteTask(context.Context, *wrapperspb.Int64Value) (*wrapperspb.BoolValue, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteTask not implemented")
 }
 func (UnimplementedTaskServiceServer) mustEmbedUnimplementedTaskServiceServer() {}
@@ -131,7 +132,7 @@ func _TaskService_CreateTask_Handler(srv interface{}, ctx context.Context, dec f
 }
 
 func _TaskService_GetTask_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(TaskGetRequest)
+	in := new(wrapperspb.Int64Value)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -143,7 +144,7 @@ func _TaskService_GetTask_Handler(srv interface{}, ctx context.Context, dec func
 		FullMethod: "/task_manager.TaskService/GetTask",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TaskServiceServer).GetTask(ctx, req.(*TaskGetRequest))
+		return srv.(TaskServiceServer).GetTask(ctx, req.(*wrapperspb.Int64Value))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -167,7 +168,7 @@ func _TaskService_UpdateTask_Handler(srv interface{}, ctx context.Context, dec f
 }
 
 func _TaskService_DeleteTask_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(TaskDeleteRequest)
+	in := new(wrapperspb.Int64Value)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -179,7 +180,7 @@ func _TaskService_DeleteTask_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: "/task_manager.TaskService/DeleteTask",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TaskServiceServer).DeleteTask(ctx, req.(*TaskDeleteRequest))
+		return srv.(TaskServiceServer).DeleteTask(ctx, req.(*wrapperspb.Int64Value))
 	}
 	return interceptor(ctx, in, info, handler)
 }

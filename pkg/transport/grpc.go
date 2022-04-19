@@ -6,6 +6,7 @@ import (
 	"github.com/go-kit/kit/transport"
 	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"github.com/go-kit/log"
+	pbWrapper "google.golang.org/protobuf/types/known/wrapperspb"
 	"tasker/pb"
 	task_ep "tasker/pkg/endpoint"
 )
@@ -62,7 +63,7 @@ func (gs *grpcServer) CreateTask(ctx context.Context, request *pb.TaskCreateRequ
 	return resp.(*pb.TaskCreateResponse), nil
 }
 
-func (gs *grpcServer) GetTask(ctx context.Context, request *pb.TaskGetRequest) (*pb.TaskGetResponse, error) {
+func (gs *grpcServer) GetTask(ctx context.Context, request *pbWrapper.Int64Value) (*pb.TaskGetResponse, error) {
 	level.Debug(gs.logger).Log("gRPC", "GetTask")
 	_, resp, err := gs.getTask.ServeGRPC(ctx, request)
 	if err != nil {
@@ -80,13 +81,13 @@ func (gs *grpcServer) UpdateTask(ctx context.Context, request *pb.TaskUpdateRequ
 	return resp.(*pb.TaskUpdateResponse), nil
 }
 
-func (gs *grpcServer) DeleteTask(ctx context.Context, request *pb.TaskDeleteRequest) (*pb.TaskDeleteResponse, error) {
+func (gs *grpcServer) DeleteTask(ctx context.Context, request *pbWrapper.Int64Value) (*pbWrapper.BoolValue, error) {
 	level.Debug(gs.logger).Log("gRPC", "DeleteTask")
 	_, resp, err := gs.deleteTask.ServeGRPC(ctx, request)
 	if err != nil {
 		return nil, err
 	}
-	return resp.(*pb.TaskDeleteResponse), nil
+	return resp.(*pbWrapper.BoolValue), nil
 }
 
 func decodeGRPCRequest(_ context.Context, request interface{}) (interface{}, error) {

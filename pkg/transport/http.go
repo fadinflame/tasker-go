@@ -7,6 +7,7 @@ import (
 	"github.com/go-kit/kit/log"
 	kithttp "github.com/go-kit/kit/transport/http"
 	"github.com/gorilla/mux"
+	pbWrapper "google.golang.org/protobuf/types/known/wrapperspb"
 	"net/http"
 	"strconv"
 	"tasker/pb"
@@ -67,7 +68,7 @@ func decodeGetTaskRequest(_ context.Context, r *http.Request) (request interface
 	if err != nil {
 		return nil, ErrBadRouting
 	}
-	return &pb.TaskGetRequest{TaskId: id}, nil
+	return &pbWrapper.Int64Value{Value: id}, nil
 }
 
 func decodeUpdateTaskRequest(_ context.Context, r *http.Request) (request interface{}, err error) {
@@ -82,12 +83,12 @@ func decodeUpdateTaskRequest(_ context.Context, r *http.Request) (request interf
 }
 
 func decodeDeleteTaskRequest(_ context.Context, r *http.Request) (request interface{}, err error) {
-	var req pb.TaskDeleteRequest
+	var req pbWrapper.Int64Value
 	id, err := getIdFromRequest(r)
 	if err != nil {
 		return nil, ErrBadRouting
 	}
-	req.TaskId = id
+	req.Value = id
 	return &req, nil
 }
 
